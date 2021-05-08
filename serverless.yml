@@ -1,14 +1,15 @@
-org: zackads
 app: gromits
 service: poi-service
 
 configValidationMode: error
+variablesResolutionMode: 20210326
 
 provider:
   name: aws
   region: eu-west-2
   stage: dev
   runtime: nodejs14.x
+  profile: personal
   lambdaHashingVersion: 20201221
 
   environment:
