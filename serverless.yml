@@ -11,18 +11,22 @@ provider:
   runtime: nodejs14.x
   profile: personal
   lambdaHashingVersion: 20201221
-
-  environment:
-    DB_URL: ${param:dbUrl}
-    DB_USER: ${param:dbUser}
-    DB_PASS: ${param:dbPass}
+  usagePlan:
+    quota:
+      limit: 1000000
+      period: MONTH
 
 plugins:
-  - serverless-offline
+  - serverless-plugin-typescript
+  - serverless-jest-plugin
 
 functions:
   app:
     handler: handler.handler
+    environment:
+      DB_URL: ${ssm:/poi-service-db-url}
+      DB_USER: ${ssm:/poi-service-db-username}
+      DB_PASS: ${ssm:/poi-service-db-password}
     events:
       - http:
           path: /buildings/{location}

@@ -1,8 +1,8 @@
 "use strict";
-const { connectToDatabase } = require("./utils/connectToDatabase");
-const { getBuildingsNear } = require("./utils/getBuildingsNear");
-const { getBuildingsWithin } = require("./utils/getBuildingsWithin");
-const { parsePointParameter, parsePolygonParameter } = require("./utils/parse");
+const { connectToDatabase } = require("./src/connectToDatabase");
+const { getBuildingsNear } = require("./src/getBuildingsNear");
+const { getBuildingsWithin } = require("./src/getBuildingsWithin");
+const { parsePointParameter, parsePolygonParameter } = require("./src/parse");
 
 module.exports.handler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
