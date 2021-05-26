@@ -2,7 +2,6 @@
   "name": "gromits-poi-service",
   "version": "1.0.0",
   "description": "API serving listed buildings in England",
-  "main": "handler.js",
   "scripts": {
     "test": "serverless-bundle test",
     "test:watch": "serverless-bundle test --watch"

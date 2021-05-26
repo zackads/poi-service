@@ -33,17 +33,6 @@ functions:
           path: /buildings/polygon/
           method: get
           cors: true
-  app:
-    handler: handler.handler
-    environment:
-      DB_URL: ${ssm:/poi-service-db-url}
-      DB_USER: ${ssm:/poi-service-db-username}
-      DB_PASS: ${ssm:/poi-service-db-password}
-    events:
-      - http:
-          path: /buildings/{location}
-          method: get
-          cors: true
 
 resources:
   - ${file(resources/api-gateway-errors.yml)}
