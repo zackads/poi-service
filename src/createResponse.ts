@@ -3,7 +3,9 @@ export const createResponse = (fn) => {
     let body, statusCode;
 
     try {
-      body = await fn(event, context);
+      body = {
+        data: await fn(event, context),
+      };
       statusCode = 200;
     } catch (e) {
       body = { error: e.message };
