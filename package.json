@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.6.6"
+    "mongodb": "^3.6.6",
+    "mongodb-client-encryption": "^1.2.3"
   },
   "devDependencies": {
     "serverless-bundle": "^4.3.1",
