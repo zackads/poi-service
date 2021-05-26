@@ -1,7 +1,6 @@
-import { parsePointParameter, parsePolygonParameter } from "./src/parse";
+import { parsePointParameter } from "./src/parse";
 import { connectToDatabase } from "./src/connectToDatabase";
 import { getBuildingsNear } from "./src/getBuildingsNear";
-import { getBuildingsWithin } from "./src/getBuildingsWithin";
 
 export const handler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
@@ -13,31 +12,6 @@ export const handler = (event, context, callback) => {
       const location = parsePointParameter(event.pathParameters.location);
       connectToDatabase()
         .then((db) => getBuildingsNear(db, location))
-        .then((result) => {
-          const response = {
-            statusCode: 200,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Credentials": true,
-            },
-            body: JSON.stringify({
-              data: result,
-            }),
-          };
-          callback(null, response);
-        })
-        .catch((error) => {
-          console.log("=> an error occurred: ", error);
-          callback(error);
-        });
-      break;
-    }
-    case "/buildings/polygon": {
-      const polygon = parsePolygonParameter(
-        event.queryStringParameters["polygon"]
-      );
-      connectToDatabase()
-        .then((db) => getBuildingsWithin(db, polygon))
         .then((result) => {
           const response = {
             statusCode: 200,

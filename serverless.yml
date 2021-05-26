@@ -23,7 +23,7 @@ plugins:
 
 functions:
   getBuildingsWithin:
-    handler: src/handlers/getBuildingWithin.main
+    handler: src/handlers/getBuildingsWithin.main
     environment:
       DB_URL: ${ssm:/poi-service-db-url}
       DB_USER: ${ssm:/poi-service-db-username}
