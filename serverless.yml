@@ -9,7 +9,6 @@ provider:
   region: eu-west-2
   stage: dev
   runtime: nodejs14.x
-  profile: personal
   lambdaHashingVersion: 20201221
   usagePlan:
     quota:
