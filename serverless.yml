@@ -17,8 +17,7 @@ provider:
       period: MONTH
 
 plugins:
-  - serverless-plugin-typescript
-  - serverless-jest-plugin
+  - serverless-bundle
 
 functions:
   app:
