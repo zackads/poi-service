@@ -1,5 +1,5 @@
 {
-  "name": "gromits-poi-service",
+  "name": "landmark-service",
   "version": "1.0.0",
   "description": "API serving listed buildings in England",
   "scripts": {
