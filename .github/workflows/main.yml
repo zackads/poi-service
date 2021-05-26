@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  unit-test:
     name: Unit tests
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +21,7 @@ jobs:
 
   deploy:
     name: Deploy
+    needs: [unit-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
