@@ -24,5 +24,3 @@ export const connectToDatabase = (uri = MONGODB_URI) => {
       console.log("=> an error occurred: ", error);
     });
 };
-
-module.exports = { connectToDatabase };

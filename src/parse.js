@@ -1,4 +1,4 @@
-const parsePointParameter = (locationString) => {
+export const parsePointParameter = (locationString) => {
   // "@51.47552,-2.60833" ==> [-2.60833, 51.47552]
   return locationString
     .substring(1)
@@ -7,7 +7,7 @@ const parsePointParameter = (locationString) => {
     .reverse();
 };
 
-const parsePolygonParameter = (polygonString) => {
+export const parsePolygonParameter = (polygonString) => {
   // "0,0,3,6,6,1" ==> [ [ [ 0 , 0 ] , [ 6 , 3 ] , [ 1 , 6 ] ] ]
   return [
     polygonString
@@ -20,5 +20,3 @@ const parsePolygonParameter = (polygonString) => {
       .map((latLng) => latLng.reverse()),
   ];
 };
-
-module.exports = { parsePointParameter, parsePolygonParameter };

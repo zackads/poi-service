@@ -1,6 +1,6 @@
 const { queryDb } = require("./queryDb");
 
-function getBuildingsWithin(db, polygon) {
+export const getBuildingsWithin = (db, polygon) => {
   console.log(
     `=> query database for buildings within ${JSON.stringify(polygon)}`
   );
@@ -17,6 +17,4 @@ function getBuildingsWithin(db, polygon) {
   };
 
   return queryDb(db, query);
-}
-
-module.exports = { getBuildingsWithin };
+};

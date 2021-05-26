@@ -1,4 +1,4 @@
-function transform(buildingFromDb) {
+export const transform = (buildingFromDb) => {
   return {
     id: buildingFromDb._id,
     properties: {
@@ -16,6 +16,4 @@ function transform(buildingFromDb) {
       ],
     },
   };
-}
-
-module.exports = { transform };
+};

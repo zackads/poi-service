@@ -15,6 +15,9 @@ provider:
       limit: 1000000
       period: MONTH
 
+package:
+  individually: true
+
 plugins:
   - serverless-bundle
 
@@ -34,3 +37,6 @@ functions:
           path: /buildings/polygon/
           method: get
           cors: true
+
+resources:
+  - ${file(resources/api-gateway-errors.yml)}

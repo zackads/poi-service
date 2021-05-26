@@ -1,6 +1,6 @@
 const { queryDb } = require("./queryDb");
 
-function getBuildingsNear(db, location, distance = 1000) {
+export const getBuildingsNear = (db, location, distance = 1000) => {
   console.log(`=> query database for buildings near ${location}`);
 
   const query = {
@@ -16,6 +16,4 @@ function getBuildingsNear(db, location, distance = 1000) {
   };
 
   return queryDb(db, query);
-}
-
-module.exports = { getBuildingsNear: getBuildingsNear };
+};

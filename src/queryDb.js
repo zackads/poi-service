@@ -1,6 +1,6 @@
 const { transform } = require("./transform");
 
-const queryDb = (db, query) =>
+export const queryDb = (db, query) =>
   db
     .collection("buildings")
     .find(query)
@@ -13,5 +13,3 @@ const queryDb = (db, query) =>
       console.log("=> an error occurred: ", error);
       return { statusCode: 500, body: "error" };
     });
-
-module.exports = { queryDb };
