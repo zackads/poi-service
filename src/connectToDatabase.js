@@ -1,9 +1,10 @@
-const MongoClient = require("mongodb").MongoClient;
+import * as MongoClient from "mongodb";
+
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`;
 
 let cachedDb = null;
 
-function connectToDatabase(uri = MONGODB_URI) {
+export const connectToDatabase = (uri = MONGODB_URI) => {
   console.log("=> connect to database");
 
   if (cachedDb) {
@@ -22,6 +23,6 @@ function connectToDatabase(uri = MONGODB_URI) {
     .catch((error) => {
       console.log("=> an error occurred: ", error);
     });
-}
+};
 
 module.exports = { connectToDatabase };
