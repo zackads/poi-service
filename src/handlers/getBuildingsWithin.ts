@@ -3,10 +3,10 @@ import { parsePolygonParameter } from "../parse";
 import { connectToDatabase } from "../connectToDatabase";
 import { getBuildingsWithin } from "../getBuildingsWithin";
 
-export const main = createResponse(async (event) => {
+export const main = createResponse((event) => {
   const polygon = parsePolygonParameter(event.queryStringParameters["polygon"]);
 
-  connectToDatabase()
+  return connectToDatabase()
     .then((db) => getBuildingsWithin(db, polygon))
     .then((result) => {
       return result;

@@ -1,10 +1,10 @@
-export const createResponse = (fn) => {
+export const createResponse = (lambda) => {
   return async (event, context) => {
     let body, statusCode;
 
     try {
       body = {
-        data: await fn(event, context),
+        data: await lambda(event, context),
       };
       statusCode = 200;
     } catch (e) {
