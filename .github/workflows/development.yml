@@ -7,19 +7,20 @@ on:
 
 jobs:
   unit-test:
-    name: Unit test landmarks-api
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - uses: ./.github/actions/unit-test
-        with:
-          service: ./services/landmarks-api
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test
 
   deploy:
-    name: Deploy landmarks-api
+    name: Deploy
     needs: [unit-test]
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +28,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - uses: ./.github/actions/deploy-serverless
+      - name: Install dependencies
+        run: npm ci
+      - name: serverless deploy
+        uses: serverless/github-action@master
         with:
-          service: ./services/landmarks-api
-          stage: development
+          args: deploy --stage production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
