@@ -7,7 +7,7 @@ on:
 
 jobs:
   landmarks-api-unit-tests:
-    name: Unit tests
+    name: landmarks-api - Unit tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,7 +23,7 @@ jobs:
         run: npm test
 
   landmarks-api-deploy:
-    name: Deploy
+    name: landmarks-api - Deploy
     needs: [landmarks-api-unit-tests]
     runs-on: ubuntu-latest
     defaults:
@@ -36,10 +36,7 @@ jobs:
           node-version: 14.x
       - name: Install dependencies
         run: npm ci
-      - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: deploy --stage production
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Configure Serverless
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+      - name: Deploy
+        run: sls deploy --stage ${{ input.stage }}
