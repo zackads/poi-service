@@ -6,6 +6,8 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Pwd
+      run: pwd
     - name: Install dependencies
       working-directory: ${{ inputs.working-directory }}
       run: npm ci
