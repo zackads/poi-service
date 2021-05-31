@@ -8,9 +8,12 @@ runs:
   using: "composite"
   steps:
     - run: pwd
+      shell: bash
     - name: Install dependencies
       working-directory: ${{ inputs.working-directory }}
       run: npm ci
+      shell: bash
     - name: Run unit tests
       working-directory: ${{ inputs.working-directory }}
       run: npm test
+      shell: bash
