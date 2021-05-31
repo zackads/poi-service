@@ -10,13 +10,13 @@ jobs:
     name: Unit test landmarks-api
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/unit-test-landmarks-api@v2
+      - uses: poi-service/unit-test-landmarks-api
 
   deploy:
     name: Deploy landmarks-api
     needs: [unit-test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/deploy-landmarks-api
+      - uses: poi-service/deploy-landmarks-api
         with:
           stage: development
