@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
       - uses: ./services/landmarks-api/.github/actions/unit-test
 
   deploy:
@@ -19,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
       - uses: ./services/landmarks-api/.github/actions/deploy
         with:
           stage: development
