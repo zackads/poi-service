@@ -1,20 +1,16 @@
-name: Unit test landmarks-api
-description: Run unit tests for the landmarks-api
+name: 'Unit test landmarks-api'
+description: 'Run unit tests for the landmarks-api'
 inputs:
   service:
-    description: The directory of the service/client to test
+    description: 'The directory of the service/client to test'
     required: true
 runs:
   using: "composite"
   steps:
     - run: pwd
-
-
-
-#  - run: pwd
-#  - name: Install dependencies
-#    working-directory: ${{ inputs.working-directory }}
-#    run: npm ci
-#  - name: Run unit tests
-#    working-directory: ${{ inputs.working-directory }}
-#    run: npm test
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+    - name: Run unit tests
+      working-directory: ${{ inputs.working-directory }}
+      run: npm test
