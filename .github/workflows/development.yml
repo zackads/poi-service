@@ -14,7 +14,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - uses: ./services/landmarks-api/.github/actions/unit-test
+      - uses: ./.github/actions/unit-test
+        with:
+          service: ./services/landmarks-api
+          stage: development
 
   deploy:
     name: Deploy landmarks-api
@@ -25,6 +28,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - uses: ./services/landmarks-api/.github/actions/deploy
+      - uses: ./.github/actions/deploy-serverless
         with:
+          service: ./services/landmarks-api
           stage: development

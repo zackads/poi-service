@@ -1,0 +1,20 @@
+name: Deploy a Serverless service
+inputs:
+  service:
+    description: The directory of the service to deploy
+    required: true
+  stage:
+    description: The stage to which to deploy, e.g. 'development' or 'production'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      working-directory: ${{ inputs.directory }}
+      run: npm ci
+    - name: Configure Serverless
+      working-directory: ${{ inputs.directory }}
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+    - name: Deploy
+      working-directory: ${{ inputs.directory }}
+      run: sls deploy --stage ${{ input.stage }}

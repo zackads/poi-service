@@ -1,9 +1,8 @@
 name: Unit test landmarks-api
 inputs:
-  working-directory:
-    description: The directory of the landmarks-api service
-    required: false
-    default: ${{ github.action_path }}/services/landmarks-api
+  service:
+    description: The directory of the service/client to test
+    required: true
 runs:
   using: composite
   steps:
