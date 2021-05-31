@@ -1,4 +1,4 @@
-name: Unit tests landmarks-api
+name: Unit test landmarks-api
 inputs:
   working-directory:
     description: The directory of the landmarks-api service
