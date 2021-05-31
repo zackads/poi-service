@@ -37,6 +37,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Configure Serverless
-        run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+        run: serverless config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
       - name: Deploy
-        run: sls deploy --stage development
+        run: serverless deploy --stage development
