@@ -1,4 +1,5 @@
 name: Unit test landmarks-api
+description: Run unit tests for the landmarks-api
 inputs:
   service:
     description: The directory of the service/client to test
