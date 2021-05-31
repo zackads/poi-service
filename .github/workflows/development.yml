@@ -6,9 +6,12 @@ on:
       - main
 
 jobs:
-  unit-test:
+  landmarks-api-unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/landmarks-api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -19,10 +22,13 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-  deploy:
+  landmarks-api-deploy:
     name: Deploy
-    needs: [unit-test]
+    needs: [landmarks-api-unit-test]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/landmarks-api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
