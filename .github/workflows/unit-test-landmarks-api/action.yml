@@ -1,0 +1,19 @@
+name: Unit tests landmarks-api
+inputs:
+  working-directory:
+    description: The directory of the landmarks-api service
+    required: false
+    default: ${{ github.action_path }}/services/landmarks-api
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+    - name: Run unit tests
+      working-directory: ${{ inputs.working-directory }}
+      run: npm test
