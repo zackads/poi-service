@@ -5,7 +5,7 @@ inputs:
     description: The directory of the service/client to test
     required: true
 runs:
-  using: composite
+  using: "composite"
   steps:
     - name: Pwd
       run: pwd
