@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to the Development environment
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
-          args: deploy
+          args: deploy --stage development
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

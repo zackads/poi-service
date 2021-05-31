@@ -1,9 +1,12 @@
+import { appConfig } from "../appConfig";
+
 const { transform } = require("./transform");
 
 export const queryDb = (db, query) =>
   db
     .collection("buildings")
     .find(query)
+    .limit(appConfig.maxQueryRecords)
     .toArray()
     .then((buildings) => {
       console.log("=> first building found: ", buildings[0]);
