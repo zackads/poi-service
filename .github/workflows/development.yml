@@ -39,4 +39,4 @@ jobs:
       - name: Configure Serverless
         run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
       - name: Deploy
-        run: sls deploy --stage ${{ input.stage }}
+        run: sls deploy --stage development
