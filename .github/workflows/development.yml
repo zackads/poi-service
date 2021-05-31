@@ -24,6 +24,7 @@ jobs:
 
   landmarks-api-deploy:
     name: landmarks-api - Deploy
+    environment: development
     needs: [landmarks-api-unit-tests]
     runs-on: ubuntu-latest
     defaults:
