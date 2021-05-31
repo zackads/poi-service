@@ -17,7 +17,6 @@ jobs:
       - uses: ./.github/actions/unit-test
         with:
           service: ./services/landmarks-api
-          stage: development
 
   deploy:
     name: Deploy landmarks-api
