@@ -1,19 +1,19 @@
-name: 'Unit test landmarks-api'
-description: 'Run unit tests for the landmarks-api'
+name: 'Hello World'
+description: 'Greet someone'
 inputs:
-  service:
-    description: 'The directory of the service/client to test'
+  who-to-greet:
+    description: 'Who to greet'
     required: true
+    default: 'World'
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-id }}
 runs:
   using: "composite"
   steps:
-    - run: pwd
+    - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
-    - name: Install dependencies
-      working-directory: ${{ inputs.working-directory }}
-      run: npm ci
-      shell: bash
-    - name: Run unit tests
-      working-directory: ${{ inputs.working-directory }}
-      run: npm test
+    - id: random-number-generator
+      run: echo "::set-output name=random-id::$(echo $RANDOM)"
       shell: bash
