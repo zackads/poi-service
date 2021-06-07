@@ -6,12 +6,9 @@ on:
       - main
 
 jobs:
-  landmarks-api-unit-tests:
-    name: landmarks-api - Unit tests
+  unit-test:
+    name: Unit tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/landmarks-api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -22,14 +19,10 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-  landmarks-api-deploy:
-    name: landmarks-api - Deploy
-    environment: development
-    needs: [landmarks-api-unit-tests]
+  deploy:
+    name: Deploy
+    needs: [unit-test]
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/landmarks-api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -37,9 +30,10 @@ jobs:
           node-version: 14.x
       - name: Install dependencies
         run: npm ci
-      - name: Install Serverless Framework
-        run: npm i -g serverless
-      - name: Configure Serverless Framework
-        run: serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Deploy
-        run: serverless deploy --stage development
+      - name: serverless deploy
+        uses: serverless/github-action@master
+        with:
+          args: deploy --stage development
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

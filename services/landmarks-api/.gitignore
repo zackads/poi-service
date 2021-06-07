@@ -1,5 +1,0 @@
-.build/
-.serverless/
-node_modules/
-.idea/
-.webpack
