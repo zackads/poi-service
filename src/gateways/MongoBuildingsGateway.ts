@@ -12,13 +12,15 @@ export class MongoBuildingsGateway implements BuildingsGateway {
     }
     private dbInstance;
 
-    getBuildingsInPolygon(polygon: Polygon): Building[] {
+    public getBuildingsInPolygon(polygon: Polygon): Building[] {
         return this.connect()
             .then((db) => this.query(db, polygon))
             .then((result) => {
                 return result;
-            }).catch((error) =>
-                console.log("=> an error occurred: ", error));
+            }).catch((error) => {
+                console.log("=> an error occurred: ", error);
+                throw error;
+            });
     }
 
     private connect() {
