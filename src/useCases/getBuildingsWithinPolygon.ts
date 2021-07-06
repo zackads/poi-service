@@ -1,9 +1,8 @@
 import { Polygon } from "../domain/Polygon";
 import { BuildingsGateway } from "../gateways/BuildingsGateway";
+import { UseCase } from "./UseCase";
 
-export const getBuildingsWithinPolygon = (
+export const getBuildingsWithinPolygon: UseCase = (
   polygon: Polygon,
   gateway: BuildingsGateway
-) => {
-  return polygon.length === 0 ? [] : gateway.getBuildingsInPolygon(polygon);
-};
+) => (polygon.length > 0 ? gateway.getBuildingsInPolygon(polygon) : []);
