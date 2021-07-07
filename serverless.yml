@@ -22,8 +22,8 @@ plugins:
   - serverless-bundle
 
 functions:
-  getBuildingsWithin:
-    handler: src/handlers/getBuildingsInPolygon.main
+  getBuildingsInPolygon:
+    handler: src/handlers/getBuildingsInPolygonHandler.main
     environment:
       DB_URL: ${ssm:/poi-service-db-url}
       DB_USER: ${ssm:/poi-service-db-username}

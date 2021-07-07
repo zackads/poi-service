@@ -36,7 +36,9 @@ export class MongoBuildingsGateway implements BuildingsGateway {
       });
   }
 
-  private static transform(mongoBuilding: MongoBuilding): Building {
+  private static mongoBuildingToBuilding(
+    mongoBuilding: MongoBuilding
+  ): Building {
     return {
       id: mongoBuilding._id,
       properties: {
@@ -69,6 +71,7 @@ export class MongoBuildingsGateway implements BuildingsGateway {
   }
 
   private query(db: MongoClient.Db, polygon: Polygon) {
+    console.log("Type!: " + typeof polygon);
     return db
       .collection(this.config.collectionName)
       .find({
@@ -83,6 +86,8 @@ export class MongoBuildingsGateway implements BuildingsGateway {
       })
       .limit(appConfig.maxQueryRecords)
       .toArray()
-      .then((buildings) => buildings.map(MongoBuildingsGateway.transform));
+      .then((buildings) =>
+        buildings.map(MongoBuildingsGateway.mongoBuildingToBuilding)
+      );
   }
 }

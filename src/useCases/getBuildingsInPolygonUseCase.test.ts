@@ -1,15 +1,15 @@
-import { getBuildingsWithinPolygon } from "./getBuildingsWithinPolygon";
+import { getBuildingsInPolygonUseCase } from "./getBuildingsInPolygonUseCase";
 import { BuildingsGateway } from "../gateways/BuildingsGateway";
 import { Polygon } from "../domain/Polygon";
 
-describe("getBuildingsWithinPolygon", () => {
+describe("getBuildingsInPolygonUseCase", () => {
   it("given a null polygon, returns no buildings", () => {
     const gateway: BuildingsGateway = {
       getBuildingsInPolygon: jest.fn(),
     };
     const nullPolygon: Polygon = [];
 
-    const buildings = getBuildingsWithinPolygon(nullPolygon, gateway);
+    const buildings = getBuildingsInPolygonUseCase(gateway)(nullPolygon);
 
     expect(buildings).toStrictEqual([]);
   });
@@ -25,7 +25,7 @@ describe("getBuildingsWithinPolygon", () => {
       [0, 0],
     ];
 
-    getBuildingsWithinPolygon(polygon, gateway);
+    getBuildingsInPolygonUseCase(gateway)(polygon);
 
     expect(gateway.getBuildingsInPolygon).toHaveBeenCalledWith(polygon);
   });

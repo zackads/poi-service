@@ -1,1 +1,1 @@
-export type UseCase = (...args: any) => any | void;
+export type UseCase = (...dependencies: any) => (...args: any) => any | void;
