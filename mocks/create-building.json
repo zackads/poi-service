@@ -1,0 +1,5 @@
+{
+  "httpMethod": "POST",
+  "resource": "/buildings/",
+  "body": "{\"name\":\"51 AND 53, SOUTHWARK STREET\",\"listEntry\":\"1385925\",\"location\":\"Borough and Bankside, Southwark, London, SE1\",\"grade\":\"II\",\"hyperlink\":\"https://historicengland.org.uk/listing/the-list/list-entry/1385925\",\"coordinates\":{\"latitude\":51.4757015,\"longitude\":-2.6085879}}"
+}
