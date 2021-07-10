@@ -7,12 +7,14 @@ import {
 import { UseCase } from "../useCases/UseCase";
 import { BuildingDTO } from "../data/BuildingDTO";
 import { Building } from "../domain/Building";
+import { saveBuilding } from "../useCases/saveBuilding";
+import { MongoBuildingsGateway } from "../gateways/MongoBuildingsGateway";
 
 export const main = async (
   event: APIGatewayEvent,
   context: Context,
   callback: Callback,
-  createBuilding: UseCase
+  createBuilding: UseCase = saveBuilding(new MongoBuildingsGateway())
 ): Promise<APIGatewayProxyResult> => {
   const buildingToCreate: Building = buildingDtoToBuilding(
     JSON.parse(event.body!)
