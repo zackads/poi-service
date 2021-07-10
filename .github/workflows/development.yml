@@ -21,6 +21,7 @@ jobs:
 
   deploy:
     name: Deploy
+    environment: development
     needs: [unit-test]
     runs-on: ubuntu-latest
     steps:

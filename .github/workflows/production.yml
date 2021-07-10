@@ -20,6 +20,7 @@ jobs:
 
   deploy:
     name: Deploy
+    environment: production
     needs: [unit-test]
     runs-on: ubuntu-latest
     steps:
