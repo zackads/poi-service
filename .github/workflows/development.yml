@@ -36,7 +36,7 @@ jobs:
         with:
           args: deploy --stage development
         env:
-          SLS_DEBUG: *
+          SLS_DEBUG: "*"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DB_URL: ${{ secrets.DB_URL }}
