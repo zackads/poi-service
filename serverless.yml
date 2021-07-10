@@ -33,6 +33,20 @@ functions:
           path: /buildings/polygon/
           method: get
           cors: true
+  createBuilding:
+    handler: src/handlers/createBuildingHandler.main
+    environment:
+      DB_URL: ${ssm:/poi-service-db-url}
+      DB_USER: ${ssm:/poi-service-db-username}
+      DB_PASS: ${ssm:/poi-service-db-password}
+    events:
+      - http:
+          path: /building
+          method: post
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/schemas/building_schema.json)}
 
 resources:
   - ${file(resources/api-gateway-errors.yml)}

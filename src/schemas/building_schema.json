@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "default": {},
+  "examples": [
+    {
+      "name": "51 AND 53, SOUTHWARK STREET",
+      "listEntry": "1385925",
+      "location": "Borough and Bankside, Southwark, London, SE1",
+      "grade": "II",
+      "hyperlink": "https://historicengland.org.uk/listing/the-list/list-entry/1385925",
+      "coordinates": {
+        "latitude": 51.4757015,
+        "longitude": -2.6085879
+      }
+    }
+  ],
+  "required": [
+    "name",
+    "listEntry",
+    "location",
+    "grade",
+    "hyperlink",
+    "coordinates"
+  ],
+  "properties": {
+    "name": {
+      "id": "#/properties/name",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "51 AND 53, SOUTHWARK STREET"
+      ]
+    },
+    "listEntry": {
+      "id": "#/properties/listEntry",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "1385925"
+      ]
+    },
+    "location": {
+      "id": "#/properties/location",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "Borough and Bankside, Southwark, London, SE1"
+      ]
+    },
+    "grade": {
+      "id": "#/properties/grade",
+      "type": "string",
+      "default": "",
+      "enum": ["I", "II", "II*"]
+    },
+    "hyperlink": {
+      "id": "#/properties/hyperlink",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "https://historicengland.org.uk/listing/the-list/list-entry/1385925"
+      ]
+    },
+    "coordinates": {
+      "id": "#/properties/coordinates",
+      "type": "object",
+      "default": {},
+      "examples": [
+        {
+          "latitude": 51.4757015,
+          "longitude": -2.6085879
+        }
+      ],
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "latitude": {
+          "id": "#/properties/coordinates/properties/latitude",
+          "type": "number",
+          "default": 0.0,
+          "examples": [
+            51.4757015
+          ]
+        },
+        "longitude": {
+          "id": "#/properties/coordinates/properties/longitude",
+          "type": "number",
+          "default": 0.0,
+          "examples": [
+            -2.6085879
+          ]
+        }
+      }
+    }
+  }
+}
