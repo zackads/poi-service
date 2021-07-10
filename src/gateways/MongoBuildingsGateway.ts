@@ -19,13 +19,14 @@ interface MongoBuilding {
 
 export class MongoBuildingsGateway implements BuildingsGateway {
   private config = {
-    databaseUri: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`,
+    databaseUri: `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}?authSource=admin&replicaSet=atlas-w3n3oy-shard-0&readPreference=primary&ssl=true`,
     databaseName: "poi",
     collectionName: "buildings",
   };
   private dbInstance: MongoClient.Db | undefined;
 
   public findBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
+    console.log(this.config.databaseUri);
     return this.find({
       geometry: {
         $geoWithin: {
