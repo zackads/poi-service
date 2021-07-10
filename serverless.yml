@@ -6,6 +6,10 @@ variablesResolutionMode: 20210326
 useDotenv: true
 unresolvedVariablesNotificationMode: error
 
+plugins:
+  - serverless-bundle
+  - serverless-domain-manager
+
 provider:
   name: aws
   region: eu-west-2
@@ -21,11 +25,16 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASS: ${env:DB_PASS}
 
+custom:
+  customDomain:
+    domainName: api.landmarkist.com
+    certificateName: landmarkist.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
 package:
   individually: true
-
-plugins:
-  - serverless-bundle
 
 functions:
   getBuildingsInPolygon:
