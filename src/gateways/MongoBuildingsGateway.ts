@@ -20,7 +20,6 @@ interface MongoBuilding {
 export class MongoBuildingsGateway implements BuildingsGateway {
   private config = {
     databaseUri: `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`,
-    databaseName: "poi",
     collectionName: "buildings",
   };
   private dbInstance: MongoClient.Db | undefined;
@@ -59,7 +58,7 @@ export class MongoBuildingsGateway implements BuildingsGateway {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }).then((client) => {
-      this.dbInstance = client.db(this.config.databaseName);
+      this.dbInstance = client.db();
       return this.dbInstance;
     });
   }
