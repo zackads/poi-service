@@ -7,7 +7,7 @@ describe("saveBuilding", () => {
   it("delegates building creation to the injected gateway", async () => {
     const gateway: BuildingsGateway = {
       save: jest.fn(),
-      getBuildingsInPolygon: jest.fn(),
+      findBuildingsInPolygon: jest.fn(),
     } as BuildingsGateway;
     const building: Building = {
       geometry: { coordinates: [0, 1], type: "Point" },
@@ -42,7 +42,7 @@ describe("saveBuilding", () => {
       save: jest
         .fn()
         .mockResolvedValue({ ...building, id: "newly-created-building-id" }),
-      getBuildingsInPolygon: jest.fn(),
+      findBuildingsInPolygon: jest.fn(),
     } as BuildingsGateway;
 
     const savedBuilding = await saveBuilding(gateway)(building);

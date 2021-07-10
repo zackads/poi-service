@@ -6,5 +6,5 @@ export const getBuildingsInPolygonUseCase: UseCase = (
   gateway: BuildingsGateway
 ) => {
   return (polygon: Polygon) =>
-    polygon.length > 0 ? gateway.getBuildingsInPolygon(polygon) : [];
+    polygon.length > 0 ? gateway.findBuildingsInPolygon(polygon) : [];
 };

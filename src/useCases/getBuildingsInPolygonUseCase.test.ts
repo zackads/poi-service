@@ -5,7 +5,8 @@ import { Polygon } from "../domain/Polygon";
 describe("getBuildingsInPolygonUseCase", () => {
   it("given a null polygon, returns no buildings", () => {
     const gateway: BuildingsGateway = {
-      getBuildingsInPolygon: jest.fn(),
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn(),
     };
     const nullPolygon: Polygon = [];
 
@@ -16,7 +17,8 @@ describe("getBuildingsInPolygonUseCase", () => {
 
   it("given a polygon, calls the gateway", () => {
     const gateway: BuildingsGateway = {
-      getBuildingsInPolygon: jest.fn(),
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn(),
     };
     const polygon: Polygon = [
       [0, 0],
@@ -27,6 +29,6 @@ describe("getBuildingsInPolygonUseCase", () => {
 
     getBuildingsInPolygonUseCase(gateway)(polygon);
 
-    expect(gateway.getBuildingsInPolygon).toHaveBeenCalledWith(polygon);
+    expect(gateway.findBuildingsInPolygon).toHaveBeenCalledWith(polygon);
   });
 });

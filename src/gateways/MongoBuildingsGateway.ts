@@ -3,6 +3,7 @@ import { appConfig } from "../../appConfig";
 import { Building } from "../domain/Building";
 import { Polygon } from "../domain/Polygon";
 import { BuildingsGateway } from "./BuildingsGateway";
+import { FilterQuery, InsertOneWriteOpResult } from "mongodb";
 
 interface MongoBuilding {
   _id: any;
@@ -24,39 +25,32 @@ export class MongoBuildingsGateway implements BuildingsGateway {
   };
   private dbInstance: MongoClient.Db | undefined;
 
-  public getBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
-    return this.connect()
-      .then((db) => this.query(db, polygon))
-      .then((result) => {
-        return result;
-      })
-      .catch((error) => {
-        console.log("=> an error occurred: ", error);
-        throw error;
-      });
+  public findBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
+    return this.find({
+      geometry: {
+        $geoWithin: {
+          $geometry: {
+            type: "Polygon",
+            coordinates: [polygon],
+          },
+        },
+      },
+    });
   }
 
-  private static mongoBuildingToBuilding(
-    mongoBuilding: MongoBuilding
-  ): Building {
-    return {
-      id: mongoBuilding._id,
-      properties: {
-        name: mongoBuilding.properties.Name,
-        listEntry: mongoBuilding.properties.ListEntry,
-        location: mongoBuilding.properties.Location,
-        grade: mongoBuilding.properties.Grade,
-        hyperlink: mongoBuilding.properties.Hyperlink,
-      },
-      geometry: {
-        type: mongoBuilding.geometry.type,
-        coordinates: [
-          mongoBuilding.geometry.coordinates[1],
-          mongoBuilding.geometry.coordinates[0],
-        ],
-      },
-    };
+  public async save(building: Building): Promise<Building> {
+    const result: InsertOneWriteOpResult<MongoBuilding> = await this.connect().then(
+      (db) =>
+        db
+          .collection(this.config.collectionName)
+          .insertOne(buildingToMongoBuilding(building))
+    );
+    const savedBuilding: MongoBuilding = result.ops[0];
+
+    return mongoBuildingToBuilding(savedBuilding);
   }
+
+  /* ---------------------- */
 
   private connect() {
     if (this.dbInstance) return Promise.resolve(this.dbInstance);
@@ -70,24 +64,50 @@ export class MongoBuildingsGateway implements BuildingsGateway {
     });
   }
 
-  private query(db: MongoClient.Db, polygon: Polygon) {
-    console.log("Type!: " + typeof polygon);
-    return db
-      .collection(this.config.collectionName)
-      .find({
-        geometry: {
-          $geoWithin: {
-            $geometry: {
-              type: "Polygon",
-              coordinates: [polygon],
-            },
-          },
-        },
-      })
-      .limit(appConfig.maxQueryRecords)
-      .toArray()
-      .then((buildings) =>
-        buildings.map(MongoBuildingsGateway.mongoBuildingToBuilding)
-      );
+  private find(query: FilterQuery<any>) {
+    return this.connect().then((db) =>
+      db
+        .collection(this.config.collectionName)
+        .find(query)
+        .limit(appConfig.maxQueryRecords)
+        .toArray()
+        .then((buildings) => buildings.map(mongoBuildingToBuilding))
+    );
   }
 }
+
+const mongoBuildingToBuilding = (mongoBuilding: MongoBuilding): Building => ({
+  id: mongoBuilding._id,
+  properties: {
+    name: mongoBuilding.properties.Name,
+    listEntry: mongoBuilding.properties.ListEntry,
+    location: mongoBuilding.properties.Location,
+    grade: mongoBuilding.properties.Grade,
+    hyperlink: mongoBuilding.properties.Hyperlink,
+  },
+  geometry: {
+    type: mongoBuilding.geometry.type,
+    coordinates: [
+      mongoBuilding.geometry.coordinates[1],
+      mongoBuilding.geometry.coordinates[0],
+    ],
+  },
+});
+
+const buildingToMongoBuilding = (building: Building): MongoBuilding => ({
+  _id: building.id,
+  properties: {
+    Name: building.properties.name,
+    ListEntry: building.properties.listEntry,
+    Location: building.properties.location,
+    Grade: building.properties.grade,
+    Hyperlink: building.properties.hyperlink,
+  },
+  geometry: {
+    type: building.geometry.type,
+    coordinates: [
+      building.geometry.coordinates[0],
+      building.geometry.coordinates[1],
+    ],
+  },
+});
