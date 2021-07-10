@@ -3,6 +3,8 @@ service: poi-service
 
 configValidationMode: error
 variablesResolutionMode: 20210326
+useDotenv: true
+unresolvedVariablesNotificationMode: error
 
 provider:
   name: aws
@@ -14,6 +16,10 @@ provider:
     quota:
       limit: 1000000
       period: MONTH
+  environment:
+    DB_URL: ${env:DB_URL}
+    DB_USER: ${env:DB_USER}
+    DB_PASS: ${env:DB_PASS}
 
 package:
   individually: true
@@ -24,10 +30,6 @@ plugins:
 functions:
   getBuildingsInPolygon:
     handler: src/handlers/getBuildingsInPolygonHandler.main
-    environment:
-      DB_URL: ${ssm:/poi-service-db-url}
-      DB_USER: ${ssm:/poi-service-db-username}
-      DB_PASS: ${ssm:/poi-service-db-password}
     events:
       - http:
           path: /buildings/polygon/
@@ -35,10 +37,6 @@ functions:
           cors: true
   createBuilding:
     handler: src/handlers/createBuildingHandler.main
-    environment:
-      DB_URL: ${ssm:/poi-service-db-url}
-      DB_USER: ${ssm:/poi-service-db-username}
-      DB_PASS: ${ssm:/poi-service-db-password}
     events:
       - http:
           path: /building
@@ -49,4 +47,5 @@ functions:
               application/json: ${file(src/schemas/building_schema.json)}
 
 resources:
-  - ${file(resources/api-gateway-errors.yml)}
+  Resources:
+    ${file(resources/api-gateway-errors.yml)}
