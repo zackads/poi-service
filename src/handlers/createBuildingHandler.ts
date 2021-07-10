@@ -14,12 +14,15 @@ export const main = async (
   callback: Callback,
   createBuilding: UseCase
 ): Promise<APIGatewayProxyResult> => {
-  const building: Building = buildingDtoToBuilding(JSON.parse(event.body!));
+  const buildingToCreate: Building = buildingDtoToBuilding(
+    JSON.parse(event.body!)
+  );
 
-  createBuilding(building);
+  const createdBuilding = await createBuilding(buildingToCreate);
+
   return {
     statusCode: 200,
-    body: "",
+    body: JSON.stringify(createdBuilding),
   };
 };
 
