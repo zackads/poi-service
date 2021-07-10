@@ -35,7 +35,7 @@ describe("main", () => {
     expect(result.body).toMatch(/error/i);
   });
 
-  it("given a valid polygon, requests buildings from the gateway", async () => {
+  it("given a valid polygon, requests buildings from the use case", async () => {
     const event = {
       queryStringParameters: {
         polygon:

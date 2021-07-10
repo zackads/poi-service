@@ -1,7 +1,7 @@
 import { LatLng } from "./LatLng";
 
 export interface Building {
-  id: string;
+  id?: string;
   properties: {
     name: string;
     listEntry: string;
