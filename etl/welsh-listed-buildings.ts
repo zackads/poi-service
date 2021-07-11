@@ -1,17 +1,17 @@
 import { LatLng } from "../src/domain/LatLng";
 import * as fs from "fs";
 import proj4 from "proj4";
-import axios from "axios";
 import { BuildingDTO } from "../src/data/BuildingDTO";
+import { sendToService } from "./sendBuildingToApi";
 
 type EastingNorthing = [number, number];
 
-interface SourceFile {
+interface WalesListedBuildingsFile {
   type: "FeatureCollection";
-  features: SourceListedBuilding[];
+  features: WalesListedBuilding[];
 }
 
-interface SourceListedBuilding {
+interface WalesListedBuilding {
   type: string;
   id: string;
   geometry: {
@@ -32,7 +32,9 @@ interface SourceListedBuilding {
   };
 }
 
-const sourceToBuildingDTO = (source: SourceListedBuilding): BuildingDTO => ({
+const walesListedBuildingToDTO = (
+  source: WalesListedBuilding
+): BuildingDTO => ({
   name: source.properties.Name,
   listEntry: source.properties.RecordNumber.toString(),
   location: source.properties.Location,
@@ -49,8 +51,8 @@ const sourceToBuildingDTO = (source: SourceListedBuilding): BuildingDTO => ({
 });
 
 const normaliseCoordinates = (
-  source: SourceListedBuilding
-): SourceListedBuilding => ({
+  source: WalesListedBuilding
+): WalesListedBuilding => ({
   ...source,
   geometry: {
     ...source.geometry,
@@ -67,33 +69,19 @@ const eastingNorthingToLatLng = (eastingNorthing: EastingNorthing): LatLng => {
   return proj4(britishNationalGridProjection, "WGS84", eastingNorthing);
 };
 
-const sendToService = async (building: BuildingDTO, uri: string) => {
-  try {
-    await axios.post(uri, JSON.stringify(building));
-    return building;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
 const run = async (sourceFilePath: string) => {
-  const source: SourceFile = JSON.parse(
+  const source: WalesListedBuildingsFile = JSON.parse(
     fs.readFileSync(sourceFilePath).toString()
   );
 
-  const sourceListedBuildings: SourceListedBuilding[] = source.features;
+  const buildings: BuildingDTO[] = source.features
+    .map(normaliseCoordinates)
+    .map(walesListedBuildingToDTO);
 
-  for (const sourceBuilding of sourceListedBuildings) {
-    const buildingToSave = sourceToBuildingDTO(
-      normaliseCoordinates(sourceBuilding)
-    );
-    const savedBuilding = await sendToService(
-      buildingToSave,
-      "https://9rc229lw41.execute-api.eu-west-2.amazonaws.com/dev/building"
-    );
-    console.log(savedBuilding);
-  }
+  await sendToService(
+    buildings,
+    "https://9rc229lw41.execute-api.eu-west-2.amazonaws.com/dev/building"
+  );
 };
 
-run("./welsh-listed-buildings.geojson");
+run("welsh-listed-buildings.geojson");
