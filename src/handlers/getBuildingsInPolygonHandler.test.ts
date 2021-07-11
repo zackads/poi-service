@@ -81,7 +81,7 @@ describe("main", () => {
       getBuildingsInPolygon
     );
 
-    expect(result.body).toStrictEqual(JSON.stringify([building]));
+    expect(result.body).toStrictEqual(JSON.stringify({ data: [building] }));
   });
 
   it("responses contain CORS headers", async () => {
