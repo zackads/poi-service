@@ -8,7 +8,6 @@ unresolvedVariablesNotificationMode: error
 
 plugins:
   - serverless-bundle
-  - serverless-domain-manager
 
 provider:
   name: aws
@@ -24,13 +23,6 @@ provider:
     DB_URL: ${env:DB_URL}
     DB_USER: ${env:DB_USER}
     DB_PASS: ${env:DB_PASS}
-
-custom:
-  customDomain:
-    domainName: ${self:provider.stage}.landmarkist.com
-    basePath: ''
-    stage: ${self:provider.stage}
-    createRoute53Record: true
 
 package:
   individually: true
