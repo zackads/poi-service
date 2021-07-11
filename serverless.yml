@@ -27,8 +27,7 @@ provider:
 
 custom:
   customDomain:
-    domainName: api.landmarkist.com
-    certificateName: landmarkist.com
+    domainName: ${self:provider.stage}.landmarkist.com
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
