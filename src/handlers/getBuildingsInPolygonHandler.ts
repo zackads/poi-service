@@ -32,7 +32,7 @@ export const main = async (
 
   return {
     statusCode: 200,
-    body: JSON.stringify(buildings),
+    body: JSON.stringify({ data: buildings }),
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true,
