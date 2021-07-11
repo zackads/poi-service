@@ -3,18 +3,18 @@ import { appConfig } from "../../appConfig";
 import { Building } from "../domain/Building";
 import { Polygon } from "../domain/Polygon";
 import { BuildingsGateway } from "./BuildingsGateway";
-import { FilterQuery, InsertOneWriteOpResult } from "mongodb";
+import { FilterQuery, UpdateWriteOpResult } from "mongodb";
 
 interface MongoBuilding {
-  _id: any;
+  _id?: string;
   properties: {
-    Name: any;
-    ListEntry: any;
-    Location: any;
-    Grade: any;
-    Hyperlink: any;
+    Name: string;
+    ListEntry: string;
+    Location: string;
+    Grade: string;
+    Hyperlink: string;
   };
-  geometry: { type: any; coordinates: number[] };
+  geometry: { type: "Point"; coordinates: number[] };
 }
 
 export class MongoBuildingsGateway implements BuildingsGateway {
@@ -45,15 +45,24 @@ export class MongoBuildingsGateway implements BuildingsGateway {
 
   public async save(building: Building): Promise<Building> {
     try {
-      const result: InsertOneWriteOpResult<MongoBuilding> = await this.connect().then(
+      const { upsertedId }: UpdateWriteOpResult = await this.connect().then(
         (db) =>
-          db
-            .collection(this.collection)
-            .insertOne(buildingToMongoBuilding(building))
+          db.collection(this.collection).replaceOne(
+            {
+              properties: {
+                ListEntry: building.properties.listEntry,
+              },
+            },
+            buildingToMongoBuilding(building),
+            { upsert: true }
+          )
       );
-      const savedBuilding: MongoBuilding = result.ops[0];
 
-      return mongoBuildingToBuilding(savedBuilding);
+      return (
+        await this.find({
+          _id: upsertedId,
+        })
+      )[0];
     } catch (e) {
       console.error(e);
       throw e;
@@ -110,7 +119,6 @@ const mongoBuildingToBuilding = (mongoBuilding: MongoBuilding): Building => ({
 });
 
 const buildingToMongoBuilding = (building: Building): MongoBuilding => ({
-  _id: building.id,
   properties: {
     Name: building.properties.name,
     ListEntry: building.properties.listEntry,
