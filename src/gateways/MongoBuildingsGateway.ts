@@ -18,13 +18,19 @@ interface MongoBuilding {
 }
 
 export class MongoBuildingsGateway implements BuildingsGateway {
-  private config = {
-    databaseUri: `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`,
-    collectionName: "buildings",
-  };
+  private uri;
+  private collection;
   private dbInstance: MongoClient.Db | undefined;
 
-  public findBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
+  constructor(
+    uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`,
+    collection = "buildings"
+  ) {
+    this.uri = uri;
+    this.collection = collection;
+  }
+
+  public async findBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
     return this.find({
       geometry: {
         $geoWithin: {
@@ -38,15 +44,20 @@ export class MongoBuildingsGateway implements BuildingsGateway {
   }
 
   public async save(building: Building): Promise<Building> {
-    const result: InsertOneWriteOpResult<MongoBuilding> = await this.connect().then(
-      (db) =>
-        db
-          .collection(this.config.collectionName)
-          .insertOne(buildingToMongoBuilding(building))
-    );
-    const savedBuilding: MongoBuilding = result.ops[0];
+    try {
+      const result: InsertOneWriteOpResult<MongoBuilding> = await this.connect().then(
+        (db) =>
+          db
+            .collection(this.collection)
+            .insertOne(buildingToMongoBuilding(building))
+      );
+      const savedBuilding: MongoBuilding = result.ops[0];
 
-    return mongoBuildingToBuilding(savedBuilding);
+      return mongoBuildingToBuilding(savedBuilding);
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 
   /* ---------------------- */
@@ -54,7 +65,7 @@ export class MongoBuildingsGateway implements BuildingsGateway {
   private connect() {
     if (this.dbInstance) return Promise.resolve(this.dbInstance);
 
-    return MongoClient.connect(this.config.databaseUri, {
+    return MongoClient.connect(this.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }).then((client) => {
@@ -63,15 +74,20 @@ export class MongoBuildingsGateway implements BuildingsGateway {
     });
   }
 
-  private find(query: FilterQuery<any>) {
-    return this.connect().then((db) =>
-      db
-        .collection(this.config.collectionName)
-        .find(query)
-        .limit(appConfig.maxQueryRecords)
-        .toArray()
-        .then((buildings) => buildings.map(mongoBuildingToBuilding))
-    );
+  private async find(query: FilterQuery<any>): Promise<Building[]> {
+    try {
+      return this.connect().then((db) =>
+        db
+          .collection(this.collection)
+          .find(query)
+          .limit(appConfig.maxQueryRecords)
+          .toArray()
+          .then((buildings) => buildings.map(mongoBuildingToBuilding))
+      );
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 }
 
