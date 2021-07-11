@@ -1,4 +1,4 @@
-name: Deploy to the Development environment
+name: Deploy to the dev environment
 
 on:
   push:
@@ -42,8 +42,8 @@ jobs:
       - name: Setup domain
         uses: serverless/github-action@master
         with:
-          args: create_domain --stage development
+          args: create_domain --stage dev
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
-          args: deploy --stage development
+          args: deploy --stage dev
