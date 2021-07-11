@@ -34,7 +34,7 @@ jobs:
       - name: Setup domain
         uses: serverless/github-action@master
         with:
-          args: create_domain
+          args: create_domain --stage development
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
