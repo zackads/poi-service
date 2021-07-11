@@ -32,7 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Setup domain
-        run: serverless create_domain
+        uses: serverless/github-action@master
+        with:
+          args: create_domain
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
