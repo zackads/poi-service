@@ -1,8 +1,11 @@
 import { LatLng } from "../src/domain/LatLng";
 import * as fs from "fs";
 import proj4 from "proj4";
-import { BuildingDTO } from "../src/data/BuildingDTO";
-import { sendToService } from "./sendBuildingToApi";
+import { MongoBuilding } from "../src/gateways/MongoBuildingsGateway";
+
+/**
+ * Source file download from http://lle.gov.wales/catalogue/item/ListedBuildings/?lang=en in GeoJSON
+ */
 
 type EastingNorthing = [number, number];
 
@@ -32,21 +35,21 @@ interface WalesListedBuilding {
   };
 }
 
-const walesListedBuildingToDTO = (
+const walesListedBuildingToMongoBuilding = (
   source: WalesListedBuilding
-): BuildingDTO => ({
-  name: source.properties.Name,
-  listEntry: source.properties.RecordNumber.toString(),
-  location: source.properties.Location,
-  grade: source.properties.Grade,
-  hyperlink: source.properties.Report,
-  coordinates: {
-    latitude: eastingNorthingToLatLng(
+): MongoBuilding => ({
+  properties: {
+    Name: source.properties.Name,
+    ListEntry: source.properties.RecordNumber.toString(),
+    Location: source.properties.Location,
+    Grade: source.properties.Grade,
+    Hyperlink: source.properties.Report,
+  },
+  geometry: {
+    type: "Point",
+    coordinates: eastingNorthingToLatLng(
       source.geometry.coordinates as EastingNorthing
-    )[0],
-    longitude: eastingNorthingToLatLng(
-      source.geometry.coordinates as EastingNorthing
-    )[1],
+    ),
   },
 });
 
@@ -69,19 +72,16 @@ const eastingNorthingToLatLng = (eastingNorthing: EastingNorthing): LatLng => {
   return proj4(britishNationalGridProjection, "WGS84", eastingNorthing);
 };
 
-const run = async (sourceFilePath: string) => {
+const run = (sourcePath: string, destinationPath: string) => {
   const source: WalesListedBuildingsFile = JSON.parse(
-    fs.readFileSync(sourceFilePath).toString()
+    fs.readFileSync(sourcePath).toString()
   );
 
-  const buildings: BuildingDTO[] = source.features
+  const buildings: MongoBuilding[] = source.features
     .map(normaliseCoordinates)
-    .map(walesListedBuildingToDTO);
+    .map(walesListedBuildingToMongoBuilding);
 
-  await sendToService(
-    buildings,
-    "https://9rc229lw41.execute-api.eu-west-2.amazonaws.com/dev/building"
-  );
+  fs.writeFileSync(destinationPath, JSON.stringify(buildings));
 };
 
-run("welsh-listed-buildings.geojson");
+run("welsh-listed-buildings-in.geojson", "welsh-listen-buildings-out.json");

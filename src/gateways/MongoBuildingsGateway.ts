@@ -5,7 +5,7 @@ import { Polygon } from "../domain/Polygon";
 import { BuildingsGateway } from "./BuildingsGateway";
 import { FilterQuery, UpdateWriteOpResult } from "mongodb";
 
-interface MongoBuilding {
+export interface MongoBuilding {
   _id?: string;
   properties: {
     Name: string;
