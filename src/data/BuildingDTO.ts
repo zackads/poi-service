@@ -1,10 +1,8 @@
-import { BuildingGrades } from "../domain/BuildingGrades";
-
 export interface BuildingDTO {
   name: string;
   listEntry: string;
   location: string;
-  grade: BuildingGrades;
+  grade: string;
   hyperlink: string;
   coordinates: {
     latitude: number;
