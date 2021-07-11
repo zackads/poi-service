@@ -1,9 +1,9 @@
 import { BuildingsGateway } from "../gateways/BuildingsGateway";
 import { Building } from "../domain/Building";
 import { BuildingGrades } from "../domain/BuildingGrades";
-import { saveBuilding } from "./saveBuilding";
+import { saveBuildingUseCase } from "./saveBuildingUseCase";
 
-describe("saveBuilding", () => {
+describe("saveBuildingUseCase", () => {
   it("delegates building creation to the injected gateway", async () => {
     const gateway: BuildingsGateway = {
       save: jest.fn(),
@@ -21,7 +21,7 @@ describe("saveBuilding", () => {
       },
     };
 
-    await saveBuilding(gateway)(building);
+    await saveBuildingUseCase(gateway)(building);
 
     expect(gateway.save).toHaveBeenCalledWith(building);
   });
@@ -45,7 +45,7 @@ describe("saveBuilding", () => {
       findBuildingsInPolygon: jest.fn(),
     } as BuildingsGateway;
 
-    const savedBuilding = await saveBuilding(gateway)(building);
+    const savedBuilding = await saveBuildingUseCase(gateway)(building);
 
     expect(savedBuilding.id).toEqual("newly-created-building-id");
   });

@@ -7,20 +7,20 @@ import {
 import { UseCase } from "../useCases/UseCase";
 import { BuildingDTO } from "../data/BuildingDTO";
 import { Building } from "../domain/Building";
-import { saveBuilding } from "../useCases/saveBuilding";
+import { saveBuildingUseCase } from "../useCases/saveBuildingUseCase";
 import { MongoBuildingsGateway } from "../gateways/MongoBuildingsGateway";
 
 export const main = async (
   event: APIGatewayEvent,
   context: Context,
   callback: Callback,
-  createBuilding: UseCase = saveBuilding(new MongoBuildingsGateway())
+  saveBuilding: UseCase = saveBuildingUseCase(new MongoBuildingsGateway())
 ): Promise<APIGatewayProxyResult> => {
   const buildingToCreate: Building = buildingDtoToBuilding(
     JSON.parse(event.body!)
   );
 
-  const createdBuilding = await createBuilding(buildingToCreate);
+  const createdBuilding = await saveBuilding(buildingToCreate);
 
   return {
     statusCode: 200,

@@ -35,7 +35,7 @@ describe("createBuildingHandler", () => {
     },
   };
 
-  it("given a valid BuildingDTO, calls the saveBuilding use case", async () => {
+  it("given a valid BuildingDTO, calls the saveBuildingUseCase use case", async () => {
     const event: APIGatewayEvent = {
       body: JSON.stringify(buildingRequest),
     } as APIGatewayEvent;
