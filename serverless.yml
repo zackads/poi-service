@@ -47,5 +47,5 @@ functions:
               application/json: ${file(src/schemas/building_schema.json)}
 
 resources:
-  Resources:
-    ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/cognito.yml)}
