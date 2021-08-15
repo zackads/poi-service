@@ -39,17 +39,17 @@ functions:
     handler: src/handlers/createBuildingHandler.main
     events:
       - http:
-          path: /building
+          path: /buildings
           method: post
           cors: true
           request:
             schemas:
               application/json: ${file(src/schemas/building_schema.json)}
-  recordDiscovery:
-    handler: src/handlers/recordDiscoveryHandler.main
+  createDiscovery:
+    handler: src/handlers/createDiscoverHandler.main
     events:
       - http:
-          path: /discovery
+          path: /discoveries
           method: post
           authorizer: aws_iam
           cors: true

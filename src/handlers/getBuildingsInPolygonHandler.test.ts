@@ -49,7 +49,7 @@ describe("main", () => {
 
     await main(event, dummyContext, dummyCallback, buildingsGateway);
 
-    expect(buildingsGateway).toHaveBeenCalledTimes(1);
+    expect(buildingsGateway.findBuildingsInPolygon).toHaveBeenCalledTimes(1);
   });
 
   it("given a valid polygon, returns found buildings", async () => {

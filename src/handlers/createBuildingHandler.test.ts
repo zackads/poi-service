@@ -12,7 +12,6 @@ describe("createBuildingHandler", () => {
    *  See serverless.yml
    *
    * */
-
   const dummyContext = {} as Context;
   const dummyCallback = {} as Callback;
   const buildingRequest: BuildingDTO = {
@@ -36,7 +35,7 @@ describe("createBuildingHandler", () => {
     },
   };
 
-  it("given a valid BuildingDTO, calls the saveBuilding use case", async () => {
+  it("given a valid BuildingDTO, saves a new Building", async () => {
     const event: APIGatewayEvent = {
       body: JSON.stringify(buildingRequest),
     } as APIGatewayEvent;
@@ -47,7 +46,7 @@ describe("createBuildingHandler", () => {
 
     await main(event, dummyContext, dummyCallback, buildingGateway);
 
-    expect(buildingGateway).toHaveBeenCalledWith(building);
+    expect(buildingGateway.save).toHaveBeenCalledWith(building);
   });
 
   it("given a valid BuildingDTO, returns created building with an id property", async () => {
@@ -55,11 +54,11 @@ describe("createBuildingHandler", () => {
       body: JSON.stringify(buildingRequest),
     } as APIGatewayEvent;
     const buildingGateway: BuildingGateway = {
-      findBuildingsInPolygon: jest.fn().mockResolvedValue({
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn().mockResolvedValue({
         ...building,
         id: "newly-created-unique-id",
       }),
-      save: jest.fn(),
     };
 
     const resultBody = JSON.parse(
