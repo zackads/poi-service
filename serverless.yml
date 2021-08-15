@@ -49,3 +49,6 @@ functions:
 resources:
   - ${file(resources/api-gateway-errors.yml)}
   - ${file(resources/cognito.yml)}
+  - ${file(resources/dynamodb.yml)}
+  - ${file(resources/iam-roles/authenticated.yml)}
+  - ${file(resources/iam-roles/unauthenticated.yml)}

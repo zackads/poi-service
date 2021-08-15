@@ -1,0 +1,16 @@
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: landmarkist-users
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "userId"
+          AttributeType: "S"
+        - AttributeName: "discoveryId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: discoveryId
+          KeyType: RANGE
