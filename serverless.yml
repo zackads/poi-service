@@ -8,6 +8,11 @@ unresolvedVariablesNotificationMode: error
 
 plugins:
   - serverless-bundle
+  - serverless-stack-output
+
+custom:
+  output:
+    file: .build/stack.json
 
 provider:
   name: aws
@@ -46,7 +51,7 @@ functions:
             schemas:
               application/json: ${file(src/schemas/building_schema.json)}
   createDiscovery:
-    handler: src/handlers/createDiscoverHandler.main
+    handler: src/handlers/createDiscoveryHandler.main
     events:
       - http:
           path: /discoveries
