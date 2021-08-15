@@ -20,13 +20,13 @@ export const main = async (
   event: GetBuildingsInPolygonEvent,
   context: Context,
   callback: Callback,
-  buildingsGateway: BuildingGateway = new MongoBuildingsGateway()
+  buildingGateway: BuildingGateway = new MongoBuildingsGateway()
 ): Promise<APIGatewayProxyResult> => {
   if (!isValid(event))
     return { statusCode: 400, body: "Error: Invalid request" };
 
   const polygon: Polygon = stringToPolygon(event.queryStringParameters.polygon);
-  const buildings = await getBuildingsInPolygon(buildingsGateway)(polygon);
+  const buildings = await getBuildingsInPolygon(buildingGateway)(polygon);
 
   return {
     statusCode: 200,

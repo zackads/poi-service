@@ -5,6 +5,7 @@ import { Discovery } from "../domain/Discovery";
 
 export class DynamoDiscoveryGateway implements DiscoveryGateway {
   private readonly tableName: string = "landmarkist-users";
+
   public async create(discovery: Discovery): Promise<Discovery> {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
