@@ -8,8 +8,6 @@ export class DynamoDiscoveryGateway implements DiscoveryGateway {
   public async create(discovery: Discovery): Promise<Discovery> {
     const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-    console.log("here!");
-
     const discoveryToCreate: Discovery = {
       ...discovery,
       discoveryId: uuidv4().toString(),
