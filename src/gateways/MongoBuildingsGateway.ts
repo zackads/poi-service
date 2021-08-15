@@ -3,7 +3,7 @@ import { FilterQuery, MongoClient, UpdateWriteOpResult } from "mongodb";
 import { appConfig } from "../../appConfig";
 import { Building } from "../domain/Building";
 import { Polygon } from "../domain/Polygon";
-import { BuildingsGateway } from "./BuildingsGateway";
+import { BuildingGateway } from "./BuildingGateway";
 
 export interface MongoBuilding {
   _id?: string;
@@ -17,7 +17,7 @@ export interface MongoBuilding {
   geometry: { type: "Point"; coordinates: number[] };
 }
 
-export class MongoBuildingsGateway implements BuildingsGateway {
+export class MongoBuildingsGateway implements BuildingGateway {
   private readonly uri: string = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`;
   private readonly dbName: string = "poi";
   private readonly collectionName: string = "buildings";

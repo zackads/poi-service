@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "default": {},
+  "required": [
+    "landmarkId",
+    "remarks"
+  ],
+  "properties": {
+    "landmarkId": {
+      "id": "#/properties/landmarkId",
+      "type": "string",
+      "default": ""
+    },
+    "remarks": {
+      "id": "#/properties/remarks",
+      "type": "string",
+      "default": ""
+    }
+  }
+}

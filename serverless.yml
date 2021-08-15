@@ -45,6 +45,17 @@ functions:
           request:
             schemas:
               application/json: ${file(src/schemas/building_schema.json)}
+  recordDiscovery:
+    handler: src/handlers/recordDiscoveryHandler.main
+    events:
+      - http:
+          path: /discovery
+          method: post
+          authorizer: aws_iam
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/schemas/discovery_schema.json)}
 
 resources:
   - ${file(resources/api-gateway-errors.yml)}

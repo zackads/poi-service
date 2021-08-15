@@ -3,9 +3,9 @@ import {
   main,
   stringToPolygon,
 } from "./getBuildingsInPolygonHandler";
-import { UseCase } from "../useCases/UseCase";
 import { Callback, Context } from "aws-lambda";
 import { Building } from "../domain/Building";
+import { BuildingGateway } from "../gateways/BuildingGateway";
 
 describe("main", () => {
   const dummyContext = {} as Context;
@@ -42,11 +42,14 @@ describe("main", () => {
           "51.45609276818087,-2.611441612243653,51.45609276818087,-2.5805425643920903,51.45209478972027,-2.5805425643920903,51.45209478972027,-2.611441612243653,51.45609276818087,-2.611441612243653",
       },
     } as GetBuildingsInPolygonEvent;
-    const getBuildingsInPolygon: UseCase = jest.fn();
+    const buildingsGateway: BuildingGateway = {
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn(),
+    };
 
-    await main(event, dummyContext, dummyCallback, getBuildingsInPolygon);
+    await main(event, dummyContext, dummyCallback, buildingsGateway);
 
-    expect(getBuildingsInPolygon).toHaveBeenCalledTimes(1);
+    expect(buildingsGateway).toHaveBeenCalledTimes(1);
   });
 
   it("given a valid polygon, returns found buildings", async () => {
@@ -70,15 +73,16 @@ describe("main", () => {
         coordinates: [1, 2],
       },
     };
-    const getBuildingsInPolygon: UseCase = jest
-      .fn()
-      .mockReturnValue([building]);
+    const buildingGateway: BuildingGateway = {
+      findBuildingsInPolygon: jest.fn().mockResolvedValue([building]),
+      save: jest.fn(),
+    };
 
     const result = await main(
       event,
       dummyContext,
       dummyCallback,
-      getBuildingsInPolygon
+      buildingGateway
     );
 
     expect(result.body).toStrictEqual(JSON.stringify({ data: [building] }));
@@ -91,13 +95,16 @@ describe("main", () => {
           "51.45609276818087,-2.611441612243653,51.45609276818087,-2.5805425643920903,51.45209478972027,-2.5805425643920903,51.45209478972027,-2.611441612243653,51.45609276818087,-2.611441612243653",
       },
     } as GetBuildingsInPolygonEvent;
-    const getBuildingsInPolygon: UseCase = jest.fn();
+    const buildingGateway: BuildingGateway = {
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn(),
+    };
 
     const result = await main(
       event,
       dummyContext,
       dummyCallback,
-      getBuildingsInPolygon
+      buildingGateway
     );
 
     expect(result.headers).toMatchObject({
