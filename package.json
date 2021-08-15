@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "API serving listed buildings in England",
   "scripts": {
-    "test": "serverless-bundle test",
-    "test:watch": "serverless-bundle test --watch"
+    "test": "serverless-bundle test .test.ts",
+    "test:watch": "serverless-bundle test --watch",
+    "test:integration": "serverless-bundle test .spec.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "@types/jest": "^26.0.23",
     "@types/mongodb": "^3.6.19",
     "@types/proj4": "^2.5.1",
+    "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.1",
     "axios": "^0.21.1",
     "axios-retry": "^3.1.9",
