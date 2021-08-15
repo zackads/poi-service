@@ -4,23 +4,23 @@ import {
   Callback,
   Context,
 } from "aws-lambda";
-import { UseCase } from "../useCases/UseCase";
 import { BuildingDTO } from "../data/BuildingDTO";
 import { Building } from "../domain/Building";
-import { saveBuildingUseCase } from "../useCases/saveBuildingUseCase";
+import { saveBuilding } from "../useCases/saveBuilding";
 import { MongoBuildingsGateway } from "../gateways/MongoBuildingsGateway";
+import { BuildingGateway } from "../gateways/BuildingGateway";
 
 export const main = async (
   event: APIGatewayEvent,
   context: Context,
   callback: Callback,
-  saveBuilding: UseCase = saveBuildingUseCase(new MongoBuildingsGateway())
+  buildingGateway: BuildingGateway = new MongoBuildingsGateway()
 ): Promise<APIGatewayProxyResult> => {
   const buildingToCreate: Building = buildingDtoToBuilding(
     JSON.parse(event.body!)
   );
 
-  const createdBuilding = await saveBuilding(buildingToCreate);
+  const createdBuilding = await saveBuilding(buildingGateway)(buildingToCreate);
 
   return {
     statusCode: 200,

@@ -1,14 +1,14 @@
-import { BuildingsGateway } from "../gateways/BuildingsGateway";
+import { BuildingGateway } from "../gateways/BuildingGateway";
 import { Building } from "../domain/Building";
 import { BuildingGrades } from "../domain/BuildingGrades";
-import { saveBuildingUseCase } from "./saveBuildingUseCase";
+import { saveBuilding } from "./saveBuilding";
 
-describe("saveBuildingUseCase", () => {
+describe("saveBuilding", () => {
   it("delegates building creation to the injected gateway", async () => {
-    const gateway: BuildingsGateway = {
+    const gateway: BuildingGateway = {
       save: jest.fn(),
       findBuildingsInPolygon: jest.fn(),
-    } as BuildingsGateway;
+    } as BuildingGateway;
     const building: Building = {
       geometry: { coordinates: [0, 1], type: "Point" },
       properties: {
@@ -21,7 +21,7 @@ describe("saveBuildingUseCase", () => {
       },
     };
 
-    await saveBuildingUseCase(gateway)(building);
+    await saveBuilding(gateway)(building);
 
     expect(gateway.save).toHaveBeenCalledWith(building);
   });
@@ -38,14 +38,14 @@ describe("saveBuildingUseCase", () => {
         name: "Chandos Road War Memorial",
       },
     };
-    const gateway: BuildingsGateway = {
+    const gateway: BuildingGateway = {
       save: jest
         .fn()
         .mockResolvedValue({ ...building, id: "newly-created-building-id" }),
       findBuildingsInPolygon: jest.fn(),
-    } as BuildingsGateway;
+    } as BuildingGateway;
 
-    const savedBuilding = await saveBuildingUseCase(gateway)(building);
+    const savedBuilding = await saveBuilding(gateway)(building);
 
     expect(savedBuilding.id).toEqual("newly-created-building-id");
   });

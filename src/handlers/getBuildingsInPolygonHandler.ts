@@ -1,6 +1,5 @@
-import { getBuildingsInPolygonUseCase } from "../useCases/getBuildingsInPolygonUseCase";
+import { getBuildingsInPolygon } from "../useCases/getBuildingsInPolygon";
 import { MongoBuildingsGateway } from "../gateways/MongoBuildingsGateway";
-import { UseCase } from "../useCases/UseCase";
 import {
   APIGatewayEvent,
   APIGatewayProxyResult,
@@ -9,6 +8,7 @@ import {
 } from "aws-lambda";
 import { Polygon } from "../domain/Polygon";
 import { LatLng } from "../domain/LatLng";
+import { BuildingGateway } from "../gateways/BuildingGateway";
 
 export interface GetBuildingsInPolygonEvent extends APIGatewayEvent {
   queryStringParameters: {
@@ -20,15 +20,13 @@ export const main = async (
   event: GetBuildingsInPolygonEvent,
   context: Context,
   callback: Callback,
-  getBuildingsInPolygon: UseCase = getBuildingsInPolygonUseCase(
-    new MongoBuildingsGateway()
-  )
+  buildingGateway: BuildingGateway = new MongoBuildingsGateway()
 ): Promise<APIGatewayProxyResult> => {
   if (!isValid(event))
     return { statusCode: 400, body: "Error: Invalid request" };
 
   const polygon: Polygon = stringToPolygon(event.queryStringParameters.polygon);
-  const buildings = await getBuildingsInPolygon(polygon);
+  const buildings = await getBuildingsInPolygon(buildingGateway)(polygon);
 
   return {
     statusCode: 200,

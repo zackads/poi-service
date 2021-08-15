@@ -3,6 +3,7 @@ import { BuildingDTO } from "../data/BuildingDTO";
 import { BuildingGrades } from "../domain/BuildingGrades";
 import { Building } from "../domain/Building";
 import { main } from "./createBuildingHandler";
+import { BuildingGateway } from "../gateways/BuildingGateway";
 
 describe("createBuildingHandler", () => {
   /*
@@ -11,7 +12,6 @@ describe("createBuildingHandler", () => {
    *  See serverless.yml
    *
    * */
-
   const dummyContext = {} as Context;
   const dummyCallback = {} as Callback;
   const buildingRequest: BuildingDTO = {
@@ -35,28 +35,34 @@ describe("createBuildingHandler", () => {
     },
   };
 
-  it("given a valid BuildingDTO, calls the saveBuildingUseCase use case", async () => {
+  it("given a valid BuildingDTO, saves a new Building", async () => {
     const event: APIGatewayEvent = {
       body: JSON.stringify(buildingRequest),
     } as APIGatewayEvent;
-    const createBuilding = jest.fn();
+    const buildingGateway: BuildingGateway = {
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn(),
+    };
 
-    await main(event, dummyContext, dummyCallback, createBuilding);
+    await main(event, dummyContext, dummyCallback, buildingGateway);
 
-    expect(createBuilding).toHaveBeenCalledWith(building);
+    expect(buildingGateway.save).toHaveBeenCalledWith(building);
   });
 
   it("given a valid BuildingDTO, returns created building with an id property", async () => {
     const event: APIGatewayEvent = {
       body: JSON.stringify(buildingRequest),
     } as APIGatewayEvent;
-    const createBuilding = jest.fn().mockResolvedValue({
-      ...building,
-      id: "newly-created-unique-id",
-    });
+    const buildingGateway: BuildingGateway = {
+      findBuildingsInPolygon: jest.fn(),
+      save: jest.fn().mockResolvedValue({
+        ...building,
+        id: "newly-created-unique-id",
+      }),
+    };
 
     const resultBody = JSON.parse(
-      (await main(event, dummyContext, dummyCallback, createBuilding)).body
+      (await main(event, dummyContext, dummyCallback, buildingGateway)).body
     );
 
     expect(resultBody.id).toEqual("newly-created-unique-id");

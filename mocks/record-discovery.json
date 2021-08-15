@@ -1,0 +1,8 @@
+{
+  "body": "{\"landmarkId\":\"60672a56899f0e73b6030291\",\"remarks\":\"Nice building, great chimneys.\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

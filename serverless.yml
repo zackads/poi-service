@@ -39,13 +39,27 @@ functions:
     handler: src/handlers/createBuildingHandler.main
     events:
       - http:
-          path: /building
+          path: /buildings
           method: post
           cors: true
           request:
             schemas:
               application/json: ${file(src/schemas/building_schema.json)}
+  createDiscovery:
+    handler: src/handlers/createDiscoverHandler.main
+    events:
+      - http:
+          path: /discoveries
+          method: post
+          authorizer: aws_iam
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(src/schemas/discovery_schema.json)}
 
 resources:
-  Resources:
-    ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/cognito.yml)}
+  - ${file(resources/dynamodb.yml)}
+  - ${file(resources/iam-roles/authenticated.yml)}
+  - ${file(resources/iam-roles/unauthenticated.yml)}
