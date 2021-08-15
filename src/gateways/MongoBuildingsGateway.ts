@@ -1,9 +1,9 @@
-import * as MongoClient from "mongodb";
+// import * as MongoClient from "mongodb";
+import { FilterQuery, MongoClient, UpdateWriteOpResult } from "mongodb";
 import { appConfig } from "../../appConfig";
 import { Building } from "../domain/Building";
 import { Polygon } from "../domain/Polygon";
 import { BuildingsGateway } from "./BuildingsGateway";
-import { FilterQuery, UpdateWriteOpResult } from "mongodb";
 
 export interface MongoBuilding {
   _id?: string;
@@ -18,20 +18,12 @@ export interface MongoBuilding {
 }
 
 export class MongoBuildingsGateway implements BuildingsGateway {
-  private uri;
-  private collection;
-  private dbInstance: MongoClient.Db | undefined;
-
-  constructor(
-    uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`,
-    collection = "buildings"
-  ) {
-    this.uri = uri;
-    this.collection = collection;
-  }
+  private readonly uri: string = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URL}`;
+  private readonly dbName: string = "poi";
+  private readonly collectionName: string = "buildings";
 
   public async findBuildingsInPolygon(polygon: Polygon): Promise<Building[]> {
-    return this.find({
+    return await this.find({
       geometry: {
         $geoWithin: {
           $geometry: {
@@ -44,93 +36,81 @@ export class MongoBuildingsGateway implements BuildingsGateway {
   }
 
   public async save(building: Building): Promise<Building> {
-    try {
-      const { upsertedId }: UpdateWriteOpResult = await this.connect().then(
-        (db) =>
-          db.collection(this.collection).replaceOne(
-            {
-              properties: {
-                ListEntry: building.properties.listEntry,
-              },
-            },
-            buildingToMongoBuilding(building),
-            { upsert: true }
-          )
-      );
+    const { upsertedId }: UpdateWriteOpResult = await (
+      await this.collection()
+    ).replaceOne(
+      {
+        properties: {
+          ListEntry: building.properties.listEntry,
+        },
+      },
+      MongoBuildingsGateway.buildingToMongoBuilding(building),
+      { upsert: true }
+    );
 
-      return (
-        await this.find({
-          _id: upsertedId,
-        })
-      )[0];
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+    return (
+      await this.find({
+        _id: upsertedId,
+      })
+    )[0];
   }
 
-  /* ---------------------- */
-
-  private connect() {
-    if (this.dbInstance) return Promise.resolve(this.dbInstance);
-
-    return MongoClient.connect(this.uri, {
+  private async collection() {
+    const client = await MongoClient.connect(this.uri, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }).then((client) => {
-      this.dbInstance = client.db();
-      return this.dbInstance;
     });
+    const db = client.db(this.dbName);
+    return db.collection(this.collectionName);
   }
 
   private async find(query: FilterQuery<any>): Promise<Building[]> {
-    try {
-      return this.connect().then((db) =>
-        db
-          .collection(this.collection)
-          .find(query)
-          .limit(appConfig.maxQueryRecords)
-          .toArray()
-          .then((buildings) => buildings.map(mongoBuildingToBuilding))
+    return (await this.collection())
+      .find(query)
+      .limit(appConfig.maxQueryRecords)
+      .toArray()
+      .then((buildings) =>
+        buildings.map(MongoBuildingsGateway.mongoBuildingToBuilding)
       );
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+  }
+
+  private static mongoBuildingToBuilding(
+    mongoBuilding: MongoBuilding
+  ): Building {
+    return {
+      id: mongoBuilding._id,
+      properties: {
+        name: mongoBuilding.properties.Name,
+        listEntry: mongoBuilding.properties.ListEntry,
+        location: mongoBuilding.properties.Location,
+        grade: mongoBuilding.properties.Grade,
+        hyperlink: mongoBuilding.properties.Hyperlink,
+      },
+      geometry: {
+        type: mongoBuilding.geometry.type,
+        coordinates: [
+          mongoBuilding.geometry.coordinates[1],
+          mongoBuilding.geometry.coordinates[0],
+        ],
+      },
+    };
+  }
+
+  private static buildingToMongoBuilding(building: Building): MongoBuilding {
+    return {
+      properties: {
+        Name: building.properties.name,
+        ListEntry: building.properties.listEntry,
+        Location: building.properties.location,
+        Grade: building.properties.grade,
+        Hyperlink: building.properties.hyperlink,
+      },
+      geometry: {
+        type: building.geometry.type,
+        coordinates: [
+          building.geometry.coordinates[0],
+          building.geometry.coordinates[1],
+        ],
+      },
+    };
   }
 }
-
-const mongoBuildingToBuilding = (mongoBuilding: MongoBuilding): Building => ({
-  id: mongoBuilding._id,
-  properties: {
-    name: mongoBuilding.properties.Name,
-    listEntry: mongoBuilding.properties.ListEntry,
-    location: mongoBuilding.properties.Location,
-    grade: mongoBuilding.properties.Grade,
-    hyperlink: mongoBuilding.properties.Hyperlink,
-  },
-  geometry: {
-    type: mongoBuilding.geometry.type,
-    coordinates: [
-      mongoBuilding.geometry.coordinates[1],
-      mongoBuilding.geometry.coordinates[0],
-    ],
-  },
-});
-
-const buildingToMongoBuilding = (building: Building): MongoBuilding => ({
-  properties: {
-    Name: building.properties.name,
-    ListEntry: building.properties.listEntry,
-    Location: building.properties.location,
-    Grade: building.properties.grade,
-    Hyperlink: building.properties.hyperlink,
-  },
-  geometry: {
-    type: building.geometry.type,
-    coordinates: [
-      building.geometry.coordinates[0],
-      building.geometry.coordinates[1],
-    ],
-  },
-});
